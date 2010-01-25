@@ -122,7 +122,7 @@ function find_last_post_forum_index_td(currtd) {
             if (as) {
                 for (var j = 0; j < as.length; j++) {
                     var a = as[j];
-                    if (a.href && a.href.indexOf("showthread.php") > 0) {
+                    if (a.href && a.href.indexOf("showthread.php") > -1) {
                         /* Só alguns links têm um #fragment. Retira-o */
                         var parts = a.href.split("#");
                         var args = parse_url_query_args(parts[0]);
@@ -178,7 +178,7 @@ function update_forum_body(forum_id) {
             if (thread_id > 0 && last_post > 0) {
                 var last_read = parseInt(st["th_last_" + thread_id] || 0);
                 if (tdicon && last_post > last_read) {
-                    tdicon.innerHTML = "Novo";  /* Feio, sei */
+                    tdicon.innerHTML = "Posts novos";  /* Feio, sei */
                 }
             }
         }
