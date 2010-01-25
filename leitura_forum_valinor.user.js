@@ -187,24 +187,22 @@ function update_forum_body(forum_id) {
 
 
 
-
-
-/* ---------------------------------------------------------------------- */
-
-var thread_id = get_current_thread_id();
-if (thread_id > 0) {
-    var st = get_storage();
-    var key = "th_last_" + thread_id;
-    var last = parseInt(st[key] || 0);
-    var posts = find_last_post_number_here();
-    if (posts > last)
-        st[key] = posts;
+function process_page() {
+    var thread_id = get_current_thread_id();
+    if (thread_id > 0) {
+        var st = get_storage();
+        var key = "th_last_" + thread_id;
+        var last = parseInt(st[key] || 0);
+        var posts = find_last_post_number_here();
+        if (posts > last)
+            st[key] = posts;
+    }
+    var forum_id = get_current_forum_id();
+    if (forum_id > 0)
+        update_forum_body(forum_id);
 }
 
-var forum_id = get_current_forum_id();
-if (forum_id > 0)
-    update_forum_body(forum_id);
-
+window.addEventListener('load', process_page, true);
 
 
 
