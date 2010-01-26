@@ -179,8 +179,14 @@ function update_forum_body(forum_id) {
                 var last_read = parseInt(st["th_last_" + thread_id] || 0);
                 if (tdicon && last_post > last_read) {
                     tdicon.innerHTML = "Posts novos";  /* Feio, sei */
+                    /* Deixa o título do tópico em negrito */
+                    var thkey = "thread_title_" + thread_id;
+                    var thlink = document.getElementById(thkey);
+                    if (thlink)
+                        thlink.style.setProperty("font-weight", "bold", null);
                 }
             }
+            
         }
     }
 }
