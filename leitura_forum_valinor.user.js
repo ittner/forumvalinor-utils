@@ -137,8 +137,17 @@ function find_last_post_forum_index_td(currtd) {
     return -1;  /* Não encontrado */
 }
 
+/* Chama a função "callback_func" para cada elemento "tr" representando uma
+ * linha da tabela de posts do fórum atual ("tr_element"). Os argumentos
+ * passados a função são:
+ *
+ * callback_func(storage, forum_id, tr_element, td_icon, thread_id, last_post)
+ *
+ * onde "td_icon" é o elemento "td" da coluna que contém os ícones do tópico.
+ * Se o callback retornar true, a iteração é interrompida.
+ */
 
-function update_forum_body(forum_id) {
+function apply_to_forum_body_rows(forum_id, callback_func) {
     var st = get_storage();
 
     /* A lista de tópicos fica num tbody com id=threadbits_forum_XX */
@@ -174,21 +183,28 @@ function update_forum_body(forum_id) {
                     tdicon = currtd;
             }
             
-            /* Muda a aparência da linha se houver posts novos */
             if (thread_id > 0 && last_post > 0) {
-                var last_read = parseInt(st["th_last_" + thread_id] || 0);
-                if (tdicon && last_post > last_read) {
-                    tdicon.innerHTML = "Posts novos";  /* Feio, sei */
-                    /* Deixa o título do tópico em negrito */
-                    var thkey = "thread_title_" + thread_id;
-                    var thlink = document.getElementById(thkey);
-                    if (thlink)
-                        thlink.style.setProperty("font-weight", "bold", null);
-                }
+                if (callback_func(st, forum_id, currtr, tdicon, thread_id, last_post))
+                    return
             }
-            
         }
     }
+}
+
+function update_forum_body(forum_id) {
+    apply_to_forum_body_rows(forum_id,
+        function(st, forum_id, tr_element, tdicon, thread_id, last_post) {
+            var last_read = parseInt(st["th_last_" + thread_id] || 0);
+            if (tdicon && last_post > last_read) {
+                tdicon.innerHTML = "Posts novos";  /* Feio, sei */
+                /* Deixa o título do tópico em negrito */
+                var thkey = "thread_title_" + thread_id;
+                var thlink = document.getElementById(thkey);
+                if (thlink)
+                    thlink.style.setProperty("font-weight", "bold", null);
+            }
+            return false;
+        });
 }
 
 
