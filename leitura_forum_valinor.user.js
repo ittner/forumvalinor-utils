@@ -208,6 +208,23 @@ function update_forum_body(forum_id) {
 }
 
 
+function mark_forum_read() {
+    apply_to_forum_body_rows(get_current_forum_id(),
+        function(st, forum_id, tr_element, tdicon, thread_id, last_post) {
+            var st_key = "th_last_" + thread_id;
+            var last_read = parseInt(st[st_key] || 0);
+            if (tdicon && last_post > last_read) {
+                st[st_key] = last_post;
+                tdicon.innerHTML = "Lido";  /* Feio, sei */
+                var thkey = "thread_title_" + thread_id;
+                var thlink = document.getElementById(thkey);
+                if (thlink)
+                    thlink.style.setProperty("font-weight", "normal", null);
+            }
+            return false;
+        });
+}
+
 
 function process_page() {
     var thread_id = get_current_thread_id();
@@ -220,11 +237,15 @@ function process_page() {
             st[key] = posts;
     }
     var forum_id = get_current_forum_id();
-    if (forum_id > 0)
+    if (forum_id > 0) {
         update_forum_body(forum_id);
+        if (GM_registerMenuCommand) {
+            GM_registerMenuCommand("Marcar fórum como lido", mark_forum_read,
+                "", "", "M");
+        }
+    }
 }
 
 window.addEventListener('load', process_page, true);
-
 
 
