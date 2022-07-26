@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name        Add Spam Cleaner links to user list
+// @name        Add Spam Cleaner and profile links to user list
 // @description Add direct links to the spam cleaner in the XenForo's user admin panel.
-// @version     1
+// @version     2
 // @include     https://www.valinor.com.br/forum/admin.php?users/list*
 // @grant       none
 // ==/UserScript==
@@ -19,6 +19,8 @@
 </td>
 
 https://www.valinor.com.br/forum/spam-cleaner/soikeobong88live.118313/?no_redirect=1
+
+https://www.valinor.com.br/forum/usuario/thabetbaco.118758/#about
 
 */
 
@@ -43,8 +45,15 @@ https://www.valinor.com.br/forum/spam-cleaner/soikeobong88live.118313/?no_redire
             if (m) {
                 let divs = links[i].getElementsByTagName("div");
                 if (divs.length > 0 && divs[0].classList.contains("dataList-mainRow")) {
+                    var username_id = m[1] + "." + m[2];
+
                     var a = document.createElement("a");
-                    a.href = prefix + "/spam-cleaner/" + m[1] + "." + m[2] + "/?no_redirect=1";
+                    a.href = prefix + "/usuario/" + username_id + "/#about";
+                    a.innerText = "[public profile]";
+                    divs[0].appendChild(a);
+
+                    var a = document.createElement("a");
+                    a.href = prefix + "/spam-cleaner/" + username_id + "/?no_redirect=1";
                     a.innerText = "[spam clean]";
                     divs[0].appendChild(a);
                     console.log(a.href);
